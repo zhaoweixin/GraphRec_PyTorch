@@ -105,3 +105,8 @@ venv.bak/
 
 
 datasets/Gowalla
+datasets/Ciao/bast_checkpoint.pth.tar
+datasets/Ciao/dataset.pkl
+datasets/Ciao/list.pkl
+datasets/Ciao/latest_checkpoint.pth.tar
+datasets/Ciao/best_checkpoint.pth.tar

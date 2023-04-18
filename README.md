@@ -25,5 +25,6 @@ python main.py
 4. Run main.py file to test the model.
 ```bash
 python main.py --test
+python main.py --test --test_path datasets/Ciao/ --dataset_path datasets/Ciao/
 ```
 

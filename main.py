@@ -29,7 +29,7 @@ from model import GraphRec
 from dataloader import GRDataset
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--dataset_path', default='dataset/Ciao/', help='dataset directory path: datasets/Ciao/Epinions')
+parser.add_argument('--dataset_path', default='datasets/Ciao/', help='dataset directory path: datasets/Ciao/Epinions')
 parser.add_argument('--batch_size', type=int, default=256, help='input batch size')
 parser.add_argument('--embed_dim', type=int, default=64, help='the dimension of embedding')
 parser.add_argument('--epoch', type=int, default=30, help='the number of epochs to train for')
@@ -37,6 +37,7 @@ parser.add_argument('--lr', type=float, default=0.001, help='learning rate')  # 
 parser.add_argument('--lr_dc', type=float, default=0.1, help='learning rate decay rate')
 parser.add_argument('--lr_dc_step', type=int, default=30, help='the number of steps after which the learning rate decay')
 parser.add_argument('--test', action='store_true', help='test')
+parser.add_argument('--test_path', default='datasets/Ciao/', help='dataset directory path: datasets/Ciao/Epinions')
 args = parser.parse_args()
 print(args)
 
@@ -57,6 +58,7 @@ def main():
         i_users_list = pickle.load(f)
         (user_count, item_count, rate_count) = pickle.load(f)
     
+    
     train_data = GRDataset(train_set, u_items_list, u_users_list, u_users_items_list, i_users_list)
     valid_data = GRDataset(valid_set, u_items_list, u_users_list, u_users_items_list, i_users_list)
     test_data = GRDataset(test_set, u_items_list, u_users_list, u_users_items_list, i_users_list)
@@ -68,7 +70,7 @@ def main():
 
     if args.test:
         print('Load checkpoint and testing...')
-        ckpt = torch.load('best_checkpoint.pth.tar')
+        ckpt = torch.load(args.test_path + 'best_checkpoint.pth.tar')
         model.load_state_dict(ckpt['state_dict'])
         mae, rmse = validate(test_loader, model)
         print("Test: MAE: {:.4f}, RMSE: {:.4f}".format(mae, rmse))
@@ -77,7 +79,7 @@ def main():
     optimizer = optim.RMSprop(model.parameters(), args.lr)
     criterion = nn.MSELoss()
     scheduler = StepLR(optimizer, step_size = args.lr_dc_step, gamma = args.lr_dc)
-
+    
     for epoch in tqdm(range(args.epoch)):
         # train for one epoch
         scheduler.step(epoch = epoch)
@@ -101,6 +103,7 @@ def main():
             torch.save(ckpt_dict, 'best_checkpoint.pth.tar')
 
         print('Epoch {} validation: MAE: {:.4f}, RMSE: {:.4f}, Best MAE: {:.4f}'.format(epoch, mae, rmse, best_mae))
+
 
 
 def trainForEpoch(train_loader, model, optimizer, epoch, num_epochs, criterion, log_aggr=1):

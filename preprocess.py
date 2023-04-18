@@ -32,6 +32,12 @@ elif args.dataset == 'Epinions':
 else:
 	pass 
 
+
+print('click_f shape:', np.shape(click_f))
+print('click_f', click_f)
+print('trust_f shape', np.shape(trust_f))
+print('trust_f', trust_f)
+
 click_list = []
 trust_list = []
 
@@ -148,5 +154,3 @@ with open(workdir + args.dataset + '/list.pkl', 'wb') as f:
 	pickle.dump(u_users_items_list, f, pickle.HIGHEST_PROTOCOL)
 	pickle.dump(i_users_list, f, pickle.HIGHEST_PROTOCOL)
 	pickle.dump((user_count, item_count, rate_count), f, pickle.HIGHEST_PROTOCOL)
-
-
